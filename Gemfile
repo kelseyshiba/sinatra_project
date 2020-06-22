@@ -12,7 +12,7 @@ gem 'pry'
 gem 'bcrypt'
 gem "tux"
 gem 'corneal'
-
+gem 'dotenv'
 
 group :test do
   gem 'rspec'

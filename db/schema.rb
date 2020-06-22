@@ -11,15 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200619190300) do
+ActiveRecord::Schema.define(version: 20200622173204) do
 
   create_table "appointments", force: :cascade do |t|
-    t.string  "name"
-    t.time    "time"
-    t.date    "date"
-    t.integer "week_number"
-    t.integer "teacher_id"
-    t.integer "student_id"
+    t.string   "name"
+    t.integer  "week_number"
+    t.integer  "teacher_id"
+    t.integer  "student_id"
+    t.datetime "start"
+    t.datetime "end"
   end
 
   create_table "students", force: :cascade do |t|

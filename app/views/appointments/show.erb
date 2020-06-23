@@ -1,21 +1,18 @@
-<h1>Appointments for <%= @student.name %></h1>
-<% @student.appointments.each do |appt|%>
-<h2>Week Number: <%=appt.week_number%></h2><br>
-<h3>Lesson Type: <%=appt.name%></h3><br>
-<h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4><br>
-<h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4><br>
-<h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4><br>
+<h1>Single Appointment for <%= @student.name.capitalize %></h1>
+<h2>Week Number: <%=@appointment.week_number %></h2><br>
+<h3>Lesson Type: <%=@appointment.name%></h3><br>
+<h4>Date: <%=@appointment.start.strftime("%B %d, %Y")%></h4><br>
+<h4>Start Time: <%=@appointment.start.strftime("%I:%M %p")%></h4><br>
+<h4>End Time: <%=@appointment.end.strftime("%I:%M %p")%></h4><br>
 
-<form method="POST" action="/appointments/<%= appt.id %>/delete">
+<form method="GET" action="/appointments/<%= @appointment.id %>/edit">
+<input type="submit" name="submit" value="Edit">
+</form><br>
+
+<form method="POST" action="/appointments/<%= @appointment.id %>/delete">
 <input type="hidden" id="hidden" name="_method" value="delete">
 <input type="submit" name="submit" value="Delete">
 </form><br>
-
-<form method="GET" action="/appointments/<%= appt.id %>/edit">
-<input type="submit" name="submit" value="Edit">
-</form><br>
-<% end %>
-
 
 
 

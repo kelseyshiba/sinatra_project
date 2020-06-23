@@ -1,1 +1,13 @@
 <h1>All Appointments</h1>
+<% appointments_sorted = @appointments.sort do |a, b| %>
+<% a.week_number <=> b.week_number %>
+<% end %>
+
+<% appointments_sorted.each do |appt| %>
+<h2>Week Number: <%=appt.week_number%></h2><br>
+<h3>Lesson Type: <%=appt.name%></h3><br>
+<h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4><br>
+<h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4><br>
+<h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4><br>
+<h4>Student: <%= appt.student.name.capitalize %></h4><br>
+<% end.sort %>

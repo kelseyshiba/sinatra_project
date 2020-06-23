@@ -1,0 +1,27 @@
+<h1>Appointments for <%= @student.name.capitalize %></h1>
+<%sorted_appointments = @student.appointments.sort do |a, b| %>
+<% a.week_number <=> b.week_number %>
+<% end %>
+
+<% sorted_appointments.each do |appt|%>
+<h2>Week Number: <%=appt.week_number%></h2><br>
+<h3>Lesson Type: <%=appt.name%></h3><br>
+<h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4><br>
+<h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4><br>
+<h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4><br>
+
+<form method="GET" action="/appointments/<%= appt.id %>/edit">
+<input type="submit" name="submit" value="Edit">
+</form><br>
+
+<form method="POST" action="/appointments/<%= appt.id %>/delete">
+<input type="hidden" id="hidden" name="_method" value="delete">
+<input type="submit" name="submit" value="Delete">
+</form><br>
+
+<% end %>
+
+
+
+
+

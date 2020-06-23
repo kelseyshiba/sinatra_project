@@ -1,13 +1,11 @@
-<h1>Edit Appointment for <%= @student.name %></h1>
+<h1>Edit Appointment for <%= @student.name.capitalize %></h1>
 
 <form method="POST" action="/appointments/<%=@appointment.id%>">
-<input type="hidden" name="_method" id="hidden" value="patch">
-<h2>Update Week Number:</h2>
-<h3>Current Week is:<%=@appointment.week_number%></h3>
+<input type="hidden" id="hidden" value="patch" name="_method">
 
-<label for="week_number"><h2>Choose New Week</h2></label>
-<select name="week_number">
-    <option value="">--Please choose an option--</option>
+<label for="week_number"><h2>Choose New Week (Current Week is:<%=@appointment.week_number%>)</h2></label>
+<select name="appointment[week_number]">
+    <option value="">--Please choose a new week option--</option>
     <option value="35" name="week1">Week 1, <%=Date.commercial(2020, 35)%></option>
     <option value="36" name="week1">Week 2, <%=Date.commercial(2020, 36)%></option>
     <option value="37" name="week1">Week 3, <%=Date.commercial(2020, 37)%></option>
@@ -25,61 +23,60 @@
     <option value="49" name="week1">Week 15, <%=Date.commercial(2020, 49)%></option>
 </select><br><br>
 
-<h3>Update Lesson Type: currently <%= @appointment.name %></h3>
-<select name="name">
+<h2>Choose Lesson Type: (Current Lesson Type is <%= @appointment.name %>)</h2>
+<select name="appointment[name]">
     <option value="">--Please choose an option--</option>
     <option value="Drum Lesson" name="drum">Drum Lesson</option>
     <option value="Guitar Lesson"name="guitar">Guitar Lesson</option>
     <option value="Piano Lesson" name="piano">Piano Lesson</option>
 </select><br><br>
 
-<h4>Choose a New Day: current day is:<%=@appointment.start.strftime("%B %d, %Y")%></h4><br>
-<h2>Days of the Week</h2>
-<input type="checkbox" id="monday" name="day" value="1">
+<h2>Choose a New Day (Current Day is <%=@appointment.start.strftime("%B %d, %Y")%>)</h2><br>
+
+<input type="checkbox" id="monday" name="appointment[day]" value="1">
 <label for="monday">Monday</label><br>
 
-<input type="checkbox" id="tuesday" name="day" value="2">
-<label for="tuesday">Tuesday</label><br>
+<input type="checkbox" id="tuesday" name="appointment[day]" value="2">
+<label for="tuesappointment[">Tuesday</label><br>
 
-<input type="checkbox" id="wednesday" name="day" value="3">
+<input type="checkbox" id="wednesday" name="appointment[day]" value="3">
 <label for="wednesday">Wednesday</label><br>
 
-<input type="checkbox" id="thursday" name="day" value="4">
+<input type="checkbox" id="thursday" name="appointment[day]" value="4">
 <label for="thursday">Thursday</label><br>
 
-<input type="checkbox" id="friday" name="day" value="5">
-<label for="friday">Friday</label><br>
+<input type="checkbox" id="friday" name="appointment[day]" value="5">
+<label for="friday">Friday</label><br><br>
 
-<h4>Choose Start Time: current: <%=@appointment.start.strftime("%I:%M %p")%></h4><br>
-<h2>Times Available</h2>
-<input type="checkbox" id="morning1" name="time" value=9>
+<h2>Choose Start Time (Current Time is <%=@appointment.start.strftime("%I:%M %p")%>)</h2>
+<input type="checkbox" id="morning1" name="appointment[time]" value=9>
 <label for="morning1">9:00am-9:50am</label><br>
 
-<input type="checkbox" id="morning2" name="time" value="10">
+<input type="checkbox" id="morning2" name="appointment[time]" value="10">
 <label for="morning2">10:00am-10:50am</label><br>
 
-<input type="checkbox" id="morning3" name="time" value="11">
+<input type="checkbox" id="morning3" name="appointment[time]" value="11">
 <label for="morning3">11:00am-11:50am</label><br>
 
-<input type="checkbox" id="afternoon1" name="time" value="12">
+<input type="checkbox" id="afternoon1" name="appointment[time]" value="12">
 <label for="afternoon1">12:00pm-12:50pm</label><br>
 
-<input type="checkbox" id="afternoon2" name="time" value="13">
+<input type="checkbox" id="afternoon2" name="appointment[time]" value="13">
 <label for="afternoon2">1:00pm-1:50pm</label><br>
 
-<input type="checkbox" id="afternoon3" name="time" value="14">
+<input type="checkbox" id="afternoon3" name="appointment[time]" value="14">
 <label for="afternoon3">2:00pm-2:50pm</label><br>
 
-<input type="checkbox" id="afternoon4" name="time" value="15">
+<input type="checkbox" id="afternoon4" name="appointment[time]" value="15">
 <label for="afternoon4">3:00pm-3:50pm</label><br>
 
-<input type="checkbox" id="afternoon5" name="time" value="16">
+<input type="checkbox" id="afternoon5" name="appointment[time]" value="16">
 <label for="afternoon5">4:00pm-4:50pm</label><br>
 
-<input type="checkbox" id="afternoon6" name="time" value="17">
-<label for="afternoon6">5:00pm-5:50pm</label><br>
+<input type="checkbox" id="afternoon6" name="appointment[time]" value="17">
+<label for="afternoon6">5:00pm-5:50pm</label><br><br>
 
-<input type="submit" value="Submit">
+<input type="submit" value="Submit Edits">
 </form>
 
 

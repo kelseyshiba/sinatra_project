@@ -13,6 +13,7 @@ gem 'bcrypt'
 gem "tux"
 gem 'corneal'
 gem 'dotenv'
+gem 'sinatra-flash', '~> 0.3.0'
 
 group :test do
   gem 'rspec'

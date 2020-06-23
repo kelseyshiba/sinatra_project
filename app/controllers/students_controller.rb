@@ -31,21 +31,33 @@ class StudentsController < ApplicationController
 
           redirect to '/appointments'
         else
+          flash[:message] = "Please login or create an account"
           erb :'students/login'
         end
       end
 
       post '/students/login' do
         student = Student.find_by_email(params[:student][:email])
-        if student && student.authenticate(:student[:password])
+        if student && student.authenticate(params[:student][:password])
             session[:user_id] = student.id
             
             redirect to '/appointments'
           else
-            #please create an account to login
+            flash[:message] = "Please create an account."
             redirect to '/students/login'
           end
       end
-      
+
+      get "/students/:id/appointments" do
+        if student_logged_in?
+            @student = Student.find_by_id(params[:id])
+            
+            erb :'students/show'
+        else
+          flash[:message] = "You must be logged in to view these appointments"
+          redirect to 'students/login'
+        end
+    end
+     
       
 end

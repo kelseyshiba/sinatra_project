@@ -1,4 +1,6 @@
 <h1>All Appointments</h1>
+
+<h2><a href="/appointments/new">Create New Appointment</a></h2>
 <% appointments_sorted = @appointments.sort do |a, b| %>
 <% a.week_number <=> b.week_number %>
 <% end %>

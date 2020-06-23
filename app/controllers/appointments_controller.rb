@@ -6,7 +6,7 @@ class AppointmentsController < ApplicationController
     end
 
     get '/appointments/new' do
-        if student_logged_in? 
+        if logged_in?
             erb :'appointments/new'
         else
             redirect to '/students/login'
@@ -14,7 +14,7 @@ class AppointmentsController < ApplicationController
     end
 
     post '/appointments' do
-        if student_logged_in? && student_current_user
+        if logged_in? && student_current_user
             chosen_date = Date.commercial(Time.now.year, params[:week_number].to_i, params[:day].to_i).to_s.gsub("-", " ").split
             new = chosen_date.map do |integer|
                 integer.to_i
@@ -28,7 +28,9 @@ class AppointmentsController < ApplicationController
             week_number = params[:week_number].to_i - 34
             
             @appointment = student_current_user.appointments.create(name: params[:name], start: start, end: ending, week_number: week_number)
-            
+            @teacher = Teacher.find_by(name: params[:teacher][:name])
+            @appointment.teacher_id = @teacher.id
+            @appointment.save
 
             redirect to "/appointments/#{@appointment.id}"
         else
@@ -38,13 +40,13 @@ class AppointmentsController < ApplicationController
     end
 
     get '/appointments/:id' do
-        if student_logged_in? 
+        if logged_in? 
             @student = student_current_user
             @appointment = Appointment.find_by_id(params[:id])
             if @appointment 
                 erb :'appointments/show'
             else
-                flash[:message] = "Sorry, no appointment exists with that ID"
+                flash[:message] = "No appointment exists with that ID"
                 redirect to '/appointments'
             end
         else
@@ -56,7 +58,7 @@ class AppointmentsController < ApplicationController
     get '/appointments/:id/edit' do
         @appointment = Appointment.find_by_id(params[:id])
         @student = @appointment.student
-        if student_logged_in?
+        if logged_in?
             if student_current_user.id == @appointment.student_id
                
                 erb :'appointments/edit'
@@ -73,7 +75,7 @@ class AppointmentsController < ApplicationController
     patch '/appointments/:id' do
         
         # {"_method"=>"patch", "appointment"=>{"week_number"=>"36", "name"=>"Piano Lesson", "day"=>"1", "time"=>"14"}, "id"=>"7"}
-        if student_logged_in? 
+        if logged_in? 
             @appointment = Appointment.find_by_id(params[:id])
             if student_current_user.id == @appointment.student_id
         
@@ -101,8 +103,8 @@ class AppointmentsController < ApplicationController
         end
     end
 
-    delete '/appointments/:id' do
-        if student_logged_in? && student_current_user
+    delete '/appointments/:id/delete' do
+        if logged_in? && student_current_user
             appt = Appointment.find_by_id(params[:id])
             appt.destroy
 

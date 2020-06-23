@@ -1,24 +1,35 @@
 class StudentsController < ApplicationController
 
     get '/students/signup' do
-        if student_logged_in? 
+        if logged_in? 
           redirect to '/appointments'
         else
+          flash[:message] = "Please sign up for an account"
           erb :'students/signup'
         end
       end
     
       post '/signup' do
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
-        student = Student.create(params[:student])
-        session[:user_id] = student.id
+        if valid_params?
+          student = Student.create(params[:student])
+          session[:user_id] = student.id
       
-        redirect to '/appointments'
+          redirect to '/appointments'
+        else
+          flash[:message] = "Please enter something into all fields"
+          redirect to '/students/signup'
+        end
       end
 
       get '/students/logout' do
-        
-        erb :'students/logout'
+        if logged_in? 
+          
+          erb :'students/logout'
+        else
+          flash[:message] = "There is no one to logout"
+          redirect to '/students/login'      
+        end
       end
 
       post '/students/logout' do
@@ -27,7 +38,7 @@ class StudentsController < ApplicationController
       end
       
       get '/students/login' do
-        if student_logged_in?
+        if logged_in?
 
           redirect to '/appointments'
         else
@@ -49,7 +60,7 @@ class StudentsController < ApplicationController
       end
 
       get "/students/:id/appointments" do
-        if student_logged_in?
+        if logged_in?
             @student = Student.find_by_id(params[:id])
             
             erb :'students/show'
@@ -57,6 +68,15 @@ class StudentsController < ApplicationController
           flash[:message] = "You must be logged in to view these appointments"
           redirect to 'students/login'
         end
+    end
+
+    helpers do 
+
+      def valid_params?
+        params[:student].none? do |k, v|
+          v == ""
+        end
+      end
     end
      
       

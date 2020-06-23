@@ -1,6 +1,6 @@
 class TeachersController < ApplicationController
     get '/teachers/signup' do
-        if teacher_logged_in? 
+        if logged_in? 
           redirect to '/appointments'
         else
           erb :'teachers/signup'
@@ -9,14 +9,19 @@ class TeachersController < ApplicationController
     
       post '/teachers/signup' do
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
-        teacher = Teacher.create(params[:teacher])
-        session[:user_id] = teacher.id
-      
-        redirect to '/appointments'
+        if valid_params?
+          teacher = Teacher.create(params[:teacher])
+          session[:user_id] = teacher.id
+          
+          redirect to '/appointments'
+        else
+          flash[:message] = "Please signup by typing into all fields"
+          redirect to '/teachers/signup'
+        end
       end
 
       get '/teachers/login' do
-        if teacher_logged_in?
+        if logged_in?
           redirect to '/appointments'
         else
           erb :'teachers/login'
@@ -48,13 +53,11 @@ class TeachersController < ApplicationController
      
 
       helpers do 
-        
-        def teacher_logged_in?
-          !!session[:user_id]
-        end
-    
-        def teacher_current_user
-          @current_user ||= Teacher.find(session[:user_id])
+
+        def valid_params?
+          params[:teacher].none? do |k, v|
+            v == ""
+          end
         end
         
       end

@@ -8,10 +8,12 @@ class TeachersController < ApplicationController
       end
     
       post '/teachers/signup' do
+        binding.pry
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
         if valid_params?
           teacher = Teacher.create(params[:teacher])
           session[:user_id] = teacher.id
+          session[:class] = teacher
           
           redirect to '/appointments'
         else
@@ -21,7 +23,7 @@ class TeachersController < ApplicationController
       end
 
       get '/teachers/login' do
-        if logged_in?
+        if logged_in? && is_teacher?
           redirect to '/appointments'
         else
           flash[:message] = "Please login or create an account"
@@ -33,6 +35,7 @@ class TeachersController < ApplicationController
         teacher = Teacher.find_by_email(params[:teacher][:email])
         if teacher && teacher.authenticate(params[:teacher][:password])
           session[:user_id] = teacher.id
+          session[:class] = teacher
 
           redirect to '/appointments'
         else 
@@ -44,7 +47,7 @@ class TeachersController < ApplicationController
       get '/teachers/logout' do
         if logged_in? && is_teacher?
 
-          erb :'students/logout'
+          erb :'teachers/logout'
         else
           flash[:message] = "There is no user to logout"
           redirect to '/teachers/login'

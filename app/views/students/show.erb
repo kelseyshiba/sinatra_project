@@ -1,4 +1,4 @@
-<h1>Appointments for <%= @student.name.capitalize %></h1>
+<h1>Appointments for <%= @student.name.split.map(&:capitalize).join(" ") %></h1>
 <%sorted_appointments = @student.appointments.sort do |a, b| %>
 <% a.week_number <=> b.week_number %>
 <% end %>
@@ -10,7 +10,7 @@
 <h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4><br>
 <h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4><br>
 <% @teacher = Teacher.find_by_id(appt.teacher_id) %>
-<h4>Teacher: <%= @teacher.name %></h4><br>
+<h4>Teacher: <%= @teacher.name if @teacher != nil %></h4><br>
 
 <form method="GET" action="/appointments/<%= appt.id %>/edit">
 <input type="submit" name="submit" value="Edit">

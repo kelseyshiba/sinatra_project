@@ -1,15 +1,22 @@
 class AppointmentsController < ApplicationController
     get '/appointments' do
         @appointments = Appointment.all
-
-        erb :'appointments/index'
+        if logged_in?
+            erb :'appointments/index'
+        else
+            flash[:message] = "Please login to view"
+            redirect to '/'
+        end
     end
 
     get '/appointments/new' do
         if logged_in?
+
             erb :'appointments/new'
-        else
+        elsif is_student?
             redirect to '/students/login'
+        else
+            redirect to '/teachers/login'
         end
     end
 
@@ -17,31 +24,22 @@ class AppointmentsController < ApplicationController
         #{"appointment"=>{"week_number"=>"36", "day"=>"1", "time"=>"9", "name"=>"Drum Lesson"}, "student"=>{"name"=>"George"}}
         if valid_params?
             if logged_in?
-                # chosen_date = Date.commercial(Time.now.year, params[:appointment][:week_number].to_i, params[:appointment][:day].to_i).to_s.gsub("-", " ").split
-                # new = chosen_date.map {|integer| integer.to_i }
-                # year = new[0]
-                # month = new[1]
-                # day = new[2]
-                # time = params[:appointment][:time].to_i
-                # start = DateTime.new(year, month, day, time)
-                # ending = DateTime.new(year, month, day, time, 50)
-                # week_number = params[:appointment][:week_number].to_i - 34
-                # create_datetime(params)
-                if student_current_user && is_student?
-                    # @appointment = student_current_user.appointments.create(name: params[:appointment][:name], start: start, end: ending, week_number: week_number)
+                if is_student?
                     @appointment = student_current_user.appointments.create(create_datetime(params))
                     @teacher = Teacher.find_by(name: params[:teacher][:name])
+                    # @teacher.appointments.create(@appointment)
                     @appointment.teacher_id = @teacher.id
-                    student_current_user.teacher_id = @teacher.id
+                    # student_current_user.teacher_id = @teacher.id
+                    @teacher.students.create(student_current_user.as_json)
                     @appointment.save
 
                     redirect to "/appointments/#{@appointment.id}"
-                elsif teacher_current_user && is_teacher?
+                elsif is_teacher?
                     @student = Student.find_by(name: params[:student][:name])
-                    # @appointment = @student.appointments.create(name: params[:appointment][:name], start: start, end: ending, week_number: week_number)
                     @appointment = @student.appointments.create(create_datetime(params))
                     @appointment.teacher_id = teacher_current_user.id
                     @student.teacher_id = teacher_current_user.id
+                    @teacher.students.create(@student.as_json)
                     @appointment.save
 
                     redirect to "/appointments/#{@appointment.id}"
@@ -51,7 +49,7 @@ class AppointmentsController < ApplicationController
                 end
             else
                 flash[:message] = "You must be logged in to view"
-                redirect to 'students/login'
+                redirect to '/'
             end
         else
             flash[:message] = "Please select a value for all fields"
@@ -63,7 +61,6 @@ class AppointmentsController < ApplicationController
         if logged_in? 
             @appointment = Appointment.find_by_id(params[:id])
             @student = Student.find_by_id(@appointment.student_id)
-
             if @appointment 
               
                 erb :'appointments/show'
@@ -97,48 +94,58 @@ class AppointmentsController < ApplicationController
     end
 
     patch '/appointments/:id' do
-        
-        # {"_method"=>"patch", "appointment"=>{"week_number"=>"36", "name"=>"Piano Lesson", "day"=>"1", "time"=>"14"}, "id"=>"7"}
-        if logged_in? 
-            @appointment = Appointment.find_by_id(params[:id])
-            @teacher = Teacher.find_by_id(@appointment.teacher_id)
-            if student_current_user.id == @appointment.student_id || teacher_current_user.id == @teacher.id 
-        
-                # chosen_date = Date.commercial(Time.now.year, params[:appointment][:week_number].to_i, params[:appointment][:day].to_i).to_s.gsub("-", " ").split
-                # new = chosen_date.map do |integer|
-                #     integer.to_i
-                # end
-                # year = new[0]
-                # month = new[1]
-                # day = new[2]
-                # time = params[:appointment][:time].to_i
-                # start = DateTime.new(year, month, day, time)
-                # ending = DateTime.new(year, month, day, time, 50)
-                # week_number = params[:appointment][:week_number].to_i - 34
+        #{"_method"=>"patch", "appointment"=>{"week_number"=>"37", "name"=>"Piano Lesson", "day"=>"1", "time"=>"12"}, "student"=>{"name"=>"George"}, "id"=>"30"}
+        @appointment = Appointment.find_by_id(params[:id])
+        if valid_params?
+            if logged_in?
+                if is_student? && @appointment.student_id == student_current_user.id
+                    @appointment.update(create_datetime(params))
+                    @teacher = Teacher.find_by(name: params[:teacher][:name])
+                    @appointment.teacher_id = @teacher.id
+                    @appointment.save
 
-                # @appointment.update(name: params[:appointment][:name], week_number: week_number, start: start, end: ending)
-                @appointment.update(create_datetime(params))
-                @appointment.save
+                    redirect to "/appointments/#{@appointment.id}"                   
+                elsif is_teacher?
+                    @appointment.update(create_datetime(params))
+                    @student = Student.find_by(name: params[:student][:name])
+                    @appointment.student_id = @student.id
+                    @appointment.save
 
-                redirect to "/appointments/#{@appointment.id}"
+                    redirect to "/appointments/#{@appointment.id}"
+                else
+                    flash[:message] = "That appointment does not belong to you."
+                    redirect to "/appointments"
+                end
             else
-                flash[:message] = "That appointment does not belong to you."
-                redirect to "/appointments"
+                flash[:message] = "You must be logged in to edit"
+                redirect to "/appointments/#{@appointment.id}"
             end
         else
-            flash[:message] = "You must be logged in to edit"
-            redirect to "/appointments/#{@appointment.id}"
+            flash[:message] = "Please select all fields"
+            redirect to "/appointments/#{@appointment.id}/edit"
         end
     end
 
     delete '/appointments/:id/delete' do
-        if logged_in? && student_current_user
-            appt = Appointment.find_by_id(params[:id])
-            appt.destroy
+        appointment = Appointment.find_by_id(params[:id])
+        if logged_in?
+            if is_student? && appointment.student_id == student_current_user.id
+                appointment.destroy
 
-            redirect to "/appointments/#{student_current_user.name}"
+                flash[:message] = "Deleted!"
+                redirect to "/appointments"
+            elsif is_teacher?
+                appointment.destroy
+
+                flash[:message] = "Deleted!"
+                redirect to "/appointments"
+            else
+                flash[:message] = "This appointment does not exist"
+                redirect to '/appointments'
+            end
         else
-            redirect to '/students/login'
+            flash[:message] = "You must be logged in to delete"
+            redirect to '/'
         end
     end
 

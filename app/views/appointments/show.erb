@@ -1,4 +1,4 @@
-<h1>Appointment Confirmation for <%= @student.name.split.map(&:capitalize).join %></h1>
+<h1>Appointment Confirmation for <%= @student.name.split.map(&:capitalize).join(" ") %></h1>
 <h2>Week Number: <%=@appointment.week_number %></h2><br>
 <h3>Lesson Type: <%=@appointment.name%></h3><br>
 <h4>Date: <%=@appointment.start.strftime("%B %d, %Y")%></h4><br>

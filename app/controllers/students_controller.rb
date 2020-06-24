@@ -14,6 +14,7 @@ class StudentsController < ApplicationController
         if valid_params?
           student = Student.create(params[:student])
           session[:user_id] = student.id
+          session[:class] = student
       
           redirect to '/appointments'
         else
@@ -23,7 +24,7 @@ class StudentsController < ApplicationController
       end
 
       get '/students/login' do
-        if logged_in?
+        if logged_in? && is_student?
 
           redirect to '/appointments'
         else
@@ -36,7 +37,8 @@ class StudentsController < ApplicationController
         student = Student.find_by_email(params[:student][:email])
         if student && student.authenticate(params[:student][:password])
             session[:user_id] = student.id
-          
+            session[:class] = student
+
             redirect to '/appointments'
           else
             flash[:message] = "Please login or create an account."
@@ -62,7 +64,7 @@ class StudentsController < ApplicationController
       get "/students/:id/appointments" do
         if logged_in? && is_student?
             @student = Student.find_by_id(params[:id])
-          
+            
             erb :'students/show'
         else
           flash[:message] = "You must be logged in to view these appointments"

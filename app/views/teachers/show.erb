@@ -1,9 +1,21 @@
-<h1>Appointments for <%= @teacher.name.capitalize %></h1>
+<h1>Appointments for <%= @teacher.name.split.map(&:capitalize).join(" ") %></h1>
+<% teacher_appts = Appointment.all.select do |appt|%>
+<% appt.teacher_id == @teacher.id %>
+<% end %>
 
-<%sorted_appointments = @teacher.appointments.sort do |a, b| %>
+<%sorted_teacher_appts = teacher_appts.sort do |a, b| %>
 <% a.week_number <=> b.week_number %>
 <% end %>
 
+<% sorted_teacher_appts.each do |appt| %>
+<h2>Week Number: <%=appt.week_number%></h2><br>
+<h3>Lesson Type: <%=appt.name%></h3><br>
+<h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4><br>
+<h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4><br>
+<h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4><br>
+<% @student = Student.find_by_id(appt.student_id) %>
+<h4>Student: <%= @student.name %></h4><br>
+<% end %>
 
 
 <h2><a href="/appointments">View All Appointments</a></h2>

@@ -11,6 +11,11 @@ class ApplicationController < Sinatra::Base
     register Sinatra::Flash
   end
 
+  not_found do
+    status 404
+    erb :error
+  end
+
   get "/" do
     
     erb :welcome
@@ -23,19 +28,19 @@ class ApplicationController < Sinatra::Base
     end
 
     def student_current_user
-      @current_user ||= Student.find(session[:user_id])
+      @student_current_user ||= Student.find_by_id(session[:user_id])
     end
 
     def teacher_current_user
-      @current_user ||= Teacher.find(session[:user_id])
+      @teacher_current_user ||= Teacher.find_by_id(session[:user_id])
     end
 
     def is_teacher?
-      session[:user_id] == teacher_current_user.id
+      session[:class].is_a?(Teacher)
     end
 
     def is_student?
-      session[:user_id] == student_current_user
+      session[:class].is_a?(Student)
     end
     
   end

@@ -83,7 +83,7 @@
 </div>
 
 <div>
-<% if logged_in? && teacher_current_user && is_teacher? %>
+<% if is_teacher? %>
 <h2>Please Choose a Student</h2>
 <select name="student[name]">
     <option value="">--Please choose an option</option>
@@ -91,7 +91,7 @@
     <option value="<%= student.name %>"><%= student.name%></option>
     <% end %>
 </select>
-<% elsif logged_in? && student_current_user && is_student?%>
+<% elsif is_student? %>
 <h2>Please Choose a Teacher</h2>
 <select name="teacher[name]">
     <option value="">--Please choose an option--</option>

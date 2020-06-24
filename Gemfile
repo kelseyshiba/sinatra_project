@@ -14,6 +14,7 @@ gem "tux"
 gem 'corneal'
 gem 'dotenv'
 gem 'sinatra-flash', '~> 0.3.0'
+gem 'sanitize', '~>4.0', '>=4.0.1'
 
 group :test do
   gem 'rspec'

@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
 
     get '/students/signup' do
-        if logged_in? 
+        if logged_in? && is_student?
           redirect to '/appointments'
         else
           flash[:message] = "Please sign up for an account"
@@ -9,7 +9,7 @@ class StudentsController < ApplicationController
         end
       end
     
-      post '/signup' do
+      post '/students/signup' do
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
         if valid_params?
           student = Student.create(params[:student])
@@ -20,6 +20,28 @@ class StudentsController < ApplicationController
           flash[:message] = "Please enter something into all fields"
           redirect to '/students/signup'
         end
+      end
+
+      get '/students/login' do
+        if logged_in?
+
+          redirect to '/appointments'
+        else
+          flash[:message] = "Please login or create an account"
+          erb :'students/login'
+        end
+      end
+
+      post '/students/login' do
+        student = Student.find_by_email(params[:student][:email])
+        if student && student.authenticate(params[:student][:password])
+            session[:user_id] = student.id
+          
+            redirect to '/appointments'
+          else
+            flash[:message] = "Please login or create an account."
+            redirect to '/students/login'
+          end
       end
 
       get '/students/logout' do
@@ -36,33 +58,11 @@ class StudentsController < ApplicationController
         session.clear
         redirect to '/'
       end
-      
-      get '/students/login' do
-        if logged_in?
-
-          redirect to '/appointments'
-        else
-          flash[:message] = "Please login or create an account"
-          erb :'students/login'
-        end
-      end
-
-      post '/students/login' do
-        student = Student.find_by_email(params[:student][:email])
-        if student && student.authenticate(params[:student][:password])
-            session[:user_id] = student.id
-            
-            redirect to '/appointments'
-          else
-            flash[:message] = "Please create an account."
-            redirect to '/students/login'
-          end
-      end
 
       get "/students/:id/appointments" do
-        if logged_in?
+        if logged_in? && is_student?
             @student = Student.find_by_id(params[:id])
-            
+          
             erb :'students/show'
         else
           flash[:message] = "You must be logged in to view these appointments"

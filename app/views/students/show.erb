@@ -9,6 +9,8 @@
 <h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4><br>
 <h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4><br>
 <h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4><br>
+<% @teacher = Teacher.find_by_id(appt.teacher_id) %>
+<h4>Teacher: <%= @teacher.name %></h4><br>
 
 <form method="GET" action="/appointments/<%= appt.id %>/edit">
 <input type="submit" name="submit" value="Edit">
@@ -21,11 +23,11 @@
 
 <% end %>
 
-<section>
-<a href="/appointments">View All Appointments</a>
-<a href="/students/logout">Student Logout</a>
-<a href="/teachers/logout">Teacher Logout</a>
-</section>
+
+<h2><a href="/appointments">View All Appointments</a></h2>
+<h2><a href="/students/logout">Student Logout</a></h2>
+
+
 
 
 

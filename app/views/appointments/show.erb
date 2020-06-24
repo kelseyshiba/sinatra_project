@@ -1,10 +1,10 @@
-<h1>Appointment Confirmation for <%= @student.name.capitalize %></h1>
+<h1>Appointment Confirmation for <%= @student.name.split.map(&:capitalize).join %></h1>
 <h2>Week Number: <%=@appointment.week_number %></h2><br>
 <h3>Lesson Type: <%=@appointment.name%></h3><br>
 <h4>Date: <%=@appointment.start.strftime("%B %d, %Y")%></h4><br>
 <h4>Start Time: <%=@appointment.start.strftime("%I:%M %p")%></h4><br>
 <h4>End Time: <%=@appointment.end.strftime("%I:%M %p")%></h4><br>
-<h4>Teacher: <%=@appointment.teacher.name%></h4><br>
+<h4>Teacher: <%=@appointment.teacher.name %></h4><br>
 
 <form method="GET" action="/appointments/<%= @appointment.id %>/edit">
 <input type="submit" name="submit" value="Edit">
@@ -14,6 +14,23 @@
 <input type="hidden" id="hidden" name="_method" value="delete">
 <input type="submit" name="submit" value="Delete">
 </form><br>
+<h2><a href="/appointments">View All Appointments</a></h2>
+
+<% if logged_in? && student_current_user && is_student? %>
+    <h2><a href="/students/<%= student_current_user.id%>/appointments">View All My Appointments (Student)</a></h2>
+<% elsif logged_in? && teacher_current_user && is_teacher? %>
+    <h2><a href="/teachers/<%= teacher_current_user.id%>/appointments">View All My Appointments (Teacher)</a></h2>
+<% else %>
+    <h2>Please login to view appointments for this user.</h2>
+<% end %>
+
+<% if logged_in? && student_current_user && is_student? %>
+    <h2><a href="/students/logout">Student Logout</a></h2>
+<% elsif logged_in? && teacher_current_user && is_teacher? %>
+    <h2><a href="/teachers/logout">Teacher Logout</a></h2>
+<% else %>
+    <h2>You must be logged in to view</h2>
+<% end %>
 
 
 

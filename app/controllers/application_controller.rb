@@ -29,6 +29,14 @@ class ApplicationController < Sinatra::Base
     def teacher_current_user
       @current_user ||= Teacher.find(session[:user_id])
     end
+
+    def is_teacher?
+      session[:user_id] == teacher_current_user.id
+    end
+
+    def is_student?
+      session[:user_id] == student_current_user
+    end
     
   end
 

@@ -1,6 +1,23 @@
 <h1>All Appointments</h1>
 
 <h2><a href="/appointments/new">Create New Appointment</a></h2>
+
+<% if logged_in? && student_current_user && is_student? %>
+    <h2><a href="/students/<%= student_current_user.id %>/appointments">Show All My Appointments (Student)</a></h2>
+<% elsif logged_in? && teacher_current_user && is_teacher? %>
+    <h2><a href="/teachers/<%= teacher_current_user.id %>/appointments">Show All My Appointments (Teacher)</a></h2>
+<% else %>
+    <h2>No Appointments to Show</h2>
+<% end %>
+
+<% if logged_in? && student_current_user && is_student? %>
+    <button><a href="students/logout">Student Logout</a></button>
+<% elsif logged_in? && teacher_current_user && is_teacher? %>
+    <button><a href="teachers/logout">Teacher Logout</a></button>
+<% else %> 
+    <h2>Please login</h2>
+<% end %>
+
 <% appointments_sorted = @appointments.sort do |a, b| %>
 <% a.week_number <=> b.week_number %>
 <% end %>

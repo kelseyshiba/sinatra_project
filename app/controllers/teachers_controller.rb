@@ -1,6 +1,6 @@
 class TeachersController < ApplicationController
     get '/teachers/signup' do
-        if logged_in? 
+        if logged_in? && is_teacher?
           redirect to '/appointments'
         else
           erb :'teachers/signup'
@@ -24,6 +24,7 @@ class TeachersController < ApplicationController
         if logged_in?
           redirect to '/appointments'
         else
+          flash[:message] = "Please login or create an account"
           erb :'teachers/login'
         end
       end
@@ -35,21 +36,36 @@ class TeachersController < ApplicationController
 
           redirect to '/appointments'
         else 
-          #message please sign up for an account
+          flash[:message] = "Please login or create an account"
           redirect to '/teachers/login'
         end
       end
 
       get '/teachers/logout' do
-        
-        erb :'students/logout'
+        if logged_in? && is_teacher?
+
+          erb :'students/logout'
+        else
+          flash[:message] = "There is no user to logout"
+          redirect to '/teachers/login'
+        end
       end
 
-      post '/teachrs/logout' do
+      post '/teachers/logout' do
         session.clear
         redirect to '/'
       end
 
+      get '/teachers/:id/appointments' do
+        if logged_in? && is_teacher? 
+          @teacher = Teacher.find_by_id(params[:id])
+          
+          erb :'teachers/show'  
+        else
+          flash[:message] = "You must be logged in to view"
+          redirect to 'teachers/login'
+        end
+      end
      
 
       helpers do 

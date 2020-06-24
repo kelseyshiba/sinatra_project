@@ -77,13 +77,25 @@
 <label for="afternoon6">5:00pm-5:50pm</label><br><br>
 
 <div>
-<h2>Please Choose a Teacher (Currently <%= @appointment.teacher.name%>)</h2>
+<% if logged_in? && teacher_current_user && is_teacher? %>
+<h2>Please Choose a Student</h2>
+<select name="student[name]">
+    <option value="">--Please choose an option</option>
+    <% Student.all.each do |student| %>
+    <option value="<%= student.name %>"><%= student.name%></option>
+    <% end %>
+</select>
+<% elsif logged_in? && student_current_user && is_student?%>
+<h2>Please Choose a Teacher</h2>
 <select name="teacher[name]">
     <option value="">--Please choose an option--</option>
     <% Teacher.all.each do |teacher| %>
     <option value="<%= teacher.name %>"><%= teacher.name %></option>
     <% end %>
 </select>
+<% else %>
+    <h2>Log in to View</h2>
+<% end %>
 </div><br>
 
 <input type="submit" value="Submit Edits">

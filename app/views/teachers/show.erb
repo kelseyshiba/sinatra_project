@@ -1,0 +1,10 @@
+<h1>Appointments for <%= @teacher.name.capitalize %></h1>
+
+<%sorted_appointments = @teacher.appointments.sort do |a, b| %>
+<% a.week_number <=> b.week_number %>
+<% end %>
+
+
+
+<h2><a href="/appointments">View All Appointments</a></h2>
+<h2><a href="/teachers/logout">Teacher Logout</a></h2>

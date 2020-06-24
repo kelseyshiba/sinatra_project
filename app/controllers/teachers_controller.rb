@@ -8,12 +8,10 @@ class TeachersController < ApplicationController
       end
     
       post '/teachers/signup' do
-        binding.pry
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
         if valid_params?
           teacher = Teacher.create(params[:teacher])
           session[:user_id] = teacher.id
-          session[:class] = teacher
           
           redirect to '/appointments'
         else
@@ -35,7 +33,6 @@ class TeachersController < ApplicationController
         teacher = Teacher.find_by_email(params[:teacher][:email])
         if teacher && teacher.authenticate(params[:teacher][:password])
           session[:user_id] = teacher.id
-          session[:class] = teacher
 
           redirect to '/appointments'
         else 

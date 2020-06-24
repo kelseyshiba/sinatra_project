@@ -36,11 +36,14 @@ class ApplicationController < Sinatra::Base
     end
 
     def is_teacher?
-      session[:class].is_a?(Teacher)
+      #rely upon 
+      !!teacher_current_user
+      # session[:class].is_a?(Teacher)
     end
 
     def is_student?
-      session[:class].is_a?(Student)
+      !!student_current_user
+      # session[:class].is_a?(Student)
     end
     
   end

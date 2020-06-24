@@ -14,8 +14,7 @@ class StudentsController < ApplicationController
         if valid_params?
           student = Student.create(params[:student])
           session[:user_id] = student.id
-          session[:class] = student
-      
+         
           redirect to '/appointments'
         else
           flash[:message] = "Please enter something into all fields"
@@ -37,7 +36,6 @@ class StudentsController < ApplicationController
         student = Student.find_by_email(params[:student][:email])
         if student && student.authenticate(params[:student][:password])
             session[:user_id] = student.id
-            session[:class] = student
 
             redirect to '/appointments'
           else

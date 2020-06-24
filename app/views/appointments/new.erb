@@ -87,7 +87,7 @@
 <h2>Please Choose a Student</h2>
 <select name="student[name]">
     <option value="">--Please choose an option</option>
-    <% Student.all.each do |student| %>
+    <% Student.all.each do |student| #student id and change params%>
     <option value="<%= student.name %>"><%= student.name%></option>
     <% end %>
 </select>

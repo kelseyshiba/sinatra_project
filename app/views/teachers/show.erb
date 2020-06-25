@@ -12,7 +12,7 @@
 <h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4>
 <h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4>
 <h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4>
-<h4>Student: <%= appt.student.name.try(:name) %></h4><br>
+<h4>Student: <%= appt.student.try(:name) %></h4><br>
 
 <div class="row">
     <div class="column">

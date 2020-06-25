@@ -17,21 +17,27 @@
 <header class="top-header">
   <h1>Lessons Schedule</h1>
 </header>
+
+    <% flash.keys.each do |type| %>
+      <div data-alert class="flash <%= type %> alert-box radius">
+      <%= flash[type] %>
+      <a href="#" class="close">&times;</a>
+      </div>
+    <% end %>
+
+
   <div class="wrapper">
- 
-  <% flash.keys.each do |type| %>
-  <div data-alert class="flash <%= type %> alert-box radius">
-    <%= flash[type] %>
-    <a href="#" class="close">&times;</a>
-  </div>
-  <% end %>
+
 
       <%= yield %>
 
     
   </div>
   <footer class="branding">
-      <small>&copy; 2020 <strong>Shiba</strong></small>
+      <small>&copy; 2020 <strong>Shiba</strong></small><br>
+      <div id="github">
+         <img src="/public/images/github.png" width="40" alt="github">    
+      </div>
   </footer>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>

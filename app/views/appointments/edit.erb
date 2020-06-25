@@ -1,4 +1,4 @@
-<h1>Edit Appointment for <%= @student.name.capitalize %></h1>
+<h2>Edit Appointment for <%= @student.name.split.map(&:capitalize).join(" ") %></h2>
 
 <form method="POST" action="/appointments/<%=@appointment.id%>">
 <input type="hidden" id="hidden" value="patch" name="_method">

@@ -24,7 +24,6 @@ class TeachersController < ApplicationController
         if logged_in? && is_teacher?
           redirect to '/appointments'
         else
-          flash[:message] = "Please login or create an account"
           erb :'teachers/login'
         end
       end

@@ -13,16 +13,15 @@
 
   /* --- Welcome Page Styles --- */
   body {
-    background-image: url('/public/images/watch-background.jpg') no-repeat;
+    background: url('/images/watch-background.jpg') no-repeat;
     background-size: cover;
     color: #333;
     font-family: Helvetica, Sans-Serif;
-    
   }
 
   .top-header {
     width: 100%;
-    height: 25%;
+    height: 15%;
     background-color: gray;
   }
 
@@ -41,17 +40,6 @@
     padding-top: 8px;
   }
 
-  .container {
-    display: flex;
-  }
-
-  .one {
-   flex: 0 0 65%; 
-  }
-
-  .two {
-    flex: 1;
-  }
 
   .wrapper {
     background: #fff;
@@ -61,6 +49,7 @@
     margin: 16px auto;
     max-width: 960px;
     padding: 2.25%; /* 18px / 800px */
+    padding-bottom: 15%;
     width: 85%;
   }
 
@@ -107,8 +96,6 @@
     height: 30px;
     font-size: 16px;
   }
-
-
 
   .listappts ul li h3 {
     text-decoration: underline;
@@ -173,15 +160,15 @@
     font-size: 14px;
   }
 
-  .branding {
-    clear: both;
-  }
-
   footer.branding {
-    border-top: 1px solid #ccc;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 15%;
     padding-top: 25px;
     background-color: gray;
-    height: 25%;
     text-align: center;
   }
 

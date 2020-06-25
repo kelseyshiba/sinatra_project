@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="/stylesheets/main.css" />
 </head>
 <body>
+<header class="top-header">
+  <h1>Lessons Signup</h1>
+</header>
   <div class="wrapper">
  
   <% flash.keys.each do |type| %>
@@ -25,10 +28,11 @@
 
       <%= yield %>
 
-    <footer class="branding">
-      <small>&copy; 2020 <strong>Shiba</strong></small>
-    </footer>
+    
   </div>
+  <footer class="branding">
+      <small>&copy; 2020 <strong>Shiba</strong></small>
+  </footer>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
   <!--[if lt IE 7]>

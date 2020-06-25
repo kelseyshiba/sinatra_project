@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200622173204) do
+ActiveRecord::Schema.define(version: 20200624203023) do
 
   create_table "appointments", force: :cascade do |t|
     t.string   "name"
@@ -23,11 +23,10 @@ ActiveRecord::Schema.define(version: 20200622173204) do
   end
 
   create_table "students", force: :cascade do |t|
-    t.string  "name"
-    t.string  "email"
-    t.string  "phone"
-    t.string  "password_digest"
-    t.integer "teacher_id"
+    t.string "name"
+    t.string "email"
+    t.string "phone"
+    t.string "password_digest"
   end
 
   create_table "teachers", force: :cascade do |t|

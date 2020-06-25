@@ -21,25 +21,18 @@ class AppointmentsController < ApplicationController
     end
 
     post '/appointments' do
-        #{"appointment"=>{"week_number"=>"36", "day"=>"1", "time"=>"9", "name"=>"Drum Lesson"}, "student"=>{"name"=>"George"}}
+        #{"appointment"=>{"week_number"=>"40", "day"=>"1", "time"=>"17", "name"=>"Piano Lesson", "student_id"=>"4"}}
         if valid_params?
             if logged_in?
                 if is_student?
-                    @appointment = student_current_user.appointments.create(create_datetime(params))
-                    @teacher = Teacher.find_by(name: params[:teacher][:name])
-                    # @teacher.appointments.create(@appointment)
-                    @appointment.teacher_id = @teacher.id
-                    # student_current_user.teacher_id = @teacher.id
-                    @teacher.students.create(student_current_user.as_json)
+                    @appointment = student_current_user.appointments.create(change_params(params))
+                    @appointment.teacher_id = params[:appointment][:teacher_id]
                     @appointment.save
 
                     redirect to "/appointments/#{@appointment.id}"
                 elsif is_teacher?
-                    @student = Student.find_by(name: params[:student][:name])
-                    @appointment = @student.appointments.create(create_datetime(params))
-                    @appointment.teacher_id = teacher_current_user.id
-                    @student.teacher_id = teacher_current_user.id
-                    @teacher.students.create(@student.as_json)
+                    @appointment = teacher_current_user.appointments.create(change_params(params))
+                    @appointment.student_id = params[:appointment][:student_id]
                     @appointment.save
 
                     redirect to "/appointments/#{@appointment.id}"
@@ -76,12 +69,15 @@ class AppointmentsController < ApplicationController
 
     get '/appointments/:id/edit' do
         @appointment = Appointment.find_by_id(params[:id])
-        @student = @appointment.student
+        @student = Student.find_by_id(@appointment.student_id)
         @teacher = Teacher.find_by_id(@appointment.teacher_id)
-
+  
         if logged_in?
-            if student_current_user.id == @appointment.student_id || @teacher.id == teacher_current_user.id
+            if @teacher
                
+                erb :'appointments/edit'
+            elsif @student.id == student_current_user.id
+
                 erb :'appointments/edit'
             else
                 flash[:message] = "You may not edit someone else's appointment"
@@ -99,16 +95,14 @@ class AppointmentsController < ApplicationController
         if valid_params?
             if logged_in?
                 if is_student? && @appointment.student_id == student_current_user.id
-                    @appointment.update(create_datetime(params))
-                    @teacher = Teacher.find_by(name: params[:teacher][:name])
-                    @appointment.teacher_id = @teacher.id
+                    @appointment.update(change_params(params))
+                    @appointment.teacher_id = params[:appointment][:teacher_id]
                     @appointment.save
 
                     redirect to "/appointments/#{@appointment.id}"                   
                 elsif is_teacher?
-                    @appointment.update(create_datetime(params))
-                    @student = Student.find_by(name: params[:student][:name])
-                    @appointment.student_id = @student.id
+                    @appointment.update(change_params(params))
+                    @appointment.student_id = params[:appointment][:student_id]
                     @appointment.save
 
                     redirect to "/appointments/#{@appointment.id}"
@@ -157,9 +151,9 @@ class AppointmentsController < ApplicationController
             end
         end
 
-        def create_datetime(params)
+        def change_params(params)
             new_params = {}
-            #{"appointment"=>{"week_number"=>"36", "day"=>"1", "time"=>"9", "name"=>"Drum Lesson"}, "student"=>{"name"=>"George"}}
+            #{"appointment"=>{"week_number"=>"40", "day"=>"1", "time"=>"17", "name"=>"Piano Lesson", "student_id"=>"4"}}
             chosen_date = Date.commercial(Time.now.year, params[:appointment][:week_number].to_i, params[:appointment][:day].to_i).to_s.gsub("-", " ").split
             new = chosen_date.map {|integer| integer.to_i }
             year = new[0]
@@ -172,6 +166,8 @@ class AppointmentsController < ApplicationController
             new_params[:name] = params[:appointment][:name]
             new_params
         end
+
+        
 
     end
     

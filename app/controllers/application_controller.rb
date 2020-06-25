@@ -24,26 +24,23 @@ class ApplicationController < Sinatra::Base
   helpers do 
         
     def logged_in?
-      !!session[:user_id]
+      !!session[:teacher_id] || session[:student_id]
     end
 
     def student_current_user
-      @student_current_user ||= Student.find_by_id(session[:user_id])
+      @student_current_user ||= Student.find_by_id(session[:student_id])
     end
 
     def teacher_current_user
-      @teacher_current_user ||= Teacher.find_by_id(session[:user_id])
+      @teacher_current_user ||= Teacher.find_by_id(session[:teacher_id])
     end
 
     def is_teacher?
-      #rely upon 
       !!teacher_current_user
-      # session[:class].is_a?(Teacher)
     end
 
     def is_student?
       !!student_current_user
-      # session[:class].is_a?(Student)
     end
     
   end

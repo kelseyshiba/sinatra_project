@@ -13,7 +13,7 @@ class StudentsController < ApplicationController
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
         if valid_params?
           student = Student.create(params[:student])
-          session[:user_id] = student.id
+          session[:student_id] = student.id
          
           redirect to '/appointments'
         else
@@ -27,7 +27,6 @@ class StudentsController < ApplicationController
 
           redirect to '/appointments'
         else
-          flash[:message] = "Please login or create an account"
           erb :'students/login'
         end
       end
@@ -35,7 +34,7 @@ class StudentsController < ApplicationController
       post '/students/login' do
         student = Student.find_by_email(params[:student][:email])
         if student && student.authenticate(params[:student][:password])
-            session[:user_id] = student.id
+            session[:student_id] = student.id
 
             redirect to '/appointments'
           else

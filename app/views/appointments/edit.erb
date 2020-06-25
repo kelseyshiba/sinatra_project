@@ -79,18 +79,18 @@
 <div>
 <% if logged_in? && teacher_current_user && is_teacher? %>
 <h2>Please Choose a Student</h2>
-<select name="student[name]">
+<select name="appointment[student_id]">
     <option value="">--Please choose an option</option>
     <% Student.all.each do |student| %>
-    <option value="<%= student.name %>"><%= student.name%></option>
+    <option value="<%= student.id %>"><%= student.name%></option>
     <% end %>
 </select>
 <% elsif logged_in? && student_current_user && is_student?%>
 <h2>Please Choose a Teacher</h2>
-<select name="teacher[name]">
+<select name="appointment[teacher_id]">
     <option value="">--Please choose an option--</option>
     <% Teacher.all.each do |teacher| %>
-    <option value="<%= teacher.name %>"><%= teacher.name %></option>
+    <option value="<%= teacher.id %>"><%= teacher.name %></option>
     <% end %>
 </select>
 <% else %>

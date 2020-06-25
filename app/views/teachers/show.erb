@@ -1,22 +1,31 @@
-<h1>Appointments for <%= @teacher.name.split.map(&:capitalize).join(" ") %></h1>
-<% teacher_appts = Appointment.all.select do |appt|%>
-<% appt.teacher_id == @teacher.id %>
+<div class="navbar">
+    <li><h3><a href="/appointments">View All Appointments</a></h3>
+    <li><h3><a href="/teachers/logout">Teacher Logout</a></h3>
+</div>
+<br><br>
+
+<h2>Appointments for <%= @teacher.name.split.map(&:capitalize).join(" ") %></h2>
+
+<% teacher_appointments.each do |appt| %>
+<h2>Week Number: <%=appt.week_number%></h2>
+<h3>Lesson Type: <%=appt.name%></h3>
+<h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4>
+<h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4>
+<h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4>
+<h4>Student: <%= appt.student.name.try(:name) %></h4><br>
+
+<div class="row">
+    <div class="column">
+        <form method="GET" action="/appointments/<%= appt.id %>/edit">
+        <input type="submit" name="submit" value="Edit">
+        </form><br>
+    </div>
+
+    <div class="column">
+        <form method="POST" action="/appointments/<%= appt.id %>/delete">
+        <input type="hidden" id="hidden" name="_method" value="delete">
+        <input type="submit" name="submit" value="Delete">
+        </form><br>
+    </div>
+</div>
 <% end %>
-
-<%sorted_teacher_appts = teacher_appts.sort do |a, b| %>
-<% a.week_number <=> b.week_number %>
-<% end %>
-
-<% sorted_teacher_appts.each do |appt| %>
-<h2>Week Number: <%=appt.week_number%></h2><br>
-<h3>Lesson Type: <%=appt.name%></h3><br>
-<h4>Date: <%=appt.start.strftime("%B %d, %Y")%></h4><br>
-<h4>Start Time: <%=appt.start.strftime("%I:%M %p")%></h4><br>
-<h4>End Time: <%=appt.end.strftime("%I:%M %p")%></h4><br>
-<% @student = Student.find_by_id(appt.student_id) %>
-<h4>Student: <%= @student.name %></h4><br>
-<% end %>
-
-
-<h2><a href="/appointments">View All Appointments</a></h2>
-<h2><a href="/teachers/logout">Teacher Logout</a></h2>

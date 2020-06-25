@@ -7,4 +7,8 @@ class Appointment < ActiveRecord::Base
             a.week_number <=> b.week_number
         end
     end
+
+    
+
+
 end

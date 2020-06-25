@@ -166,9 +166,6 @@ class AppointmentsController < ApplicationController
             new_params[:name] = params[:appointment][:name]
             new_params
         end
-
-        
-
     end
     
 

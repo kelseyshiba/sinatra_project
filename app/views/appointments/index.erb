@@ -1,34 +1,51 @@
-
 <div class="navbar">
-<h2>All Appointments</h2>
-<h3><a href="/appointments/new">Create New Appointment</a></h3>
+<li><h3><a href="/appointments/new">Create New Appointment</a></h3>
 
 <% if logged_in? && student_current_user && is_student? %>
-    <h3><a href="/students/<%= student_current_user.id %>/appointments">Show All My Appointments (Student)</a></h3>
+    <li><h3><a href="/students/<%= student_current_user.id %>/appointments">Show All My Appointments (Student)</a></h3>
 <% elsif logged_in? && teacher_current_user && is_teacher? %>
-    <h3><a href="/teachers/<%= teacher_current_user.id %>/appointments">Show All My Appointments (Teacher)</a></h3>
+    <li><h3><a href="/teachers/<%= teacher_current_user.id %>/appointments">Show All My Appointments (Teacher)</a></h3>
 <% else %>
-    <h3>No Appointments to Show</h3>
+    <li><h3>No Appointments to Show</h3>
 <% end %>
 
 <% if logged_in? && student_current_user && is_student? %>
-    <h3><a href="students/logout">Student Logout</a></h3>
+    <li><h3><a href="students/logout">Student Logout</a></h3>
 <% elsif logged_in? && teacher_current_user && is_teacher? %>
-    <h3><a href="teachers/logout">Teacher Logout</a></h3>
+    <li><h3><a href="teachers/logout">Teacher Logout</a></h3>
 <% else %> 
-    <h3>Please login</h3>
+    <li><h3>Please login</h3>
 <% end %>
 </div>
 
-<section class="listappts">
-<ul>
-<% Appointment.sort_appointments.each do |appt| %>
-<li><h3>Week Number: <%=appt.week_number%></h3>
-<li><p>Lesson Type: <%=appt.name%></p>
-<li><p>Date: <%=appt.start.strftime("%B %d, %Y")%></p>
-<li><p>Start Time: <%=appt.start.strftime("%I:%M %p")%></p>
-<li><p>End Time: <%=appt.end.strftime("%I:%M %p")%></p>
-<li><p>Student: <%= appt.student.name.capitalize %></p>
-<% end %>
-</ul>
-</section>
+<br><br>
+
+<h2>All Appointments</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Week Number</th>
+        <th>Lesson Type</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Student</th>
+    </tr>
+    </thead>
+<tbody>
+    <% Appointment.sort_appointments.each do |appt| %>
+    <tr>
+        <td><%=appt.week_number%></td>
+        <td><%=appt.name%></td>
+        <td><%=appt.start.strftime("%B %d, %Y")%></td>
+        <td><%=appt.start.strftime("%I:%M %p")%></td>
+        <td><%=appt.end.strftime("%I:%M %p")%></td>
+        <td><%= appt.student.name.capitalize %></td>
+    </tr>
+    <% end %>
+</tbody>
+</table>
+
+
+

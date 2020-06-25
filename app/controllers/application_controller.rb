@@ -43,6 +43,22 @@ class ApplicationController < Sinatra::Base
       !!student_current_user
     end
     
+    def teacher_appointments
+      Appointment.all.select do |appt|
+          appt.teacher_id == teacher_current_user.id
+      end.sort do |a,b|
+        a.week_number <=> b.week_number
+      end
+    end
+
+    def student_appointments
+      Appointment.all.select do |appt|
+        appt.student_id == student_current_user.id
+      end.sort do |a, b|
+        a.week_number <=> b.week_number
+      end
+    end
+
   end
 
   

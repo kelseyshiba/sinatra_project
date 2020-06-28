@@ -50,12 +50,11 @@ class AppointmentsController < ApplicationController
         end
     end
 
-    get '/appointments/:id' do
+    get '/appointments/:id' do 
         if logged_in? 
             @appointment = Appointment.find_by_id(params[:id])
-            @student = Student.find_by_id(@appointment.student_id)
             if @appointment 
-              
+                @student = Student.find_by_id(@appointment.student_id)
                 erb :'appointments/show'
             else
                 flash[:message] = "No appointment exists with that ID"

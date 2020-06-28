@@ -4,20 +4,21 @@ class StudentsController < ApplicationController
         if logged_in? && is_student?
           redirect to '/appointments'
         else
-          flash[:message] = "Please sign up for an account"
           erb :'students/signup'
         end
       end
     
       post '/students/signup' do
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
+        sanitize_params
+  
         if valid_params?
-          student = Student.create(params[:student])
+          student = Student.create(sanitize_params)
           session[:student_id] = student.id
          
           redirect to '/appointments'
         else
-          flash[:message] = "Please enter something into all fields"
+          flash[:message] = "Please enter something into all fields or enter a valid entry"
           redirect to '/students/signup'
         end
       end
@@ -32,6 +33,9 @@ class StudentsController < ApplicationController
       end
 
       post '/students/login' do
+        Sanitize.fragment(params[:student][:email])
+        Sanitize.fragment(params[:student][:password])
+
         student = Student.find_by_email(params[:student][:email])
         if student && student.authenticate(params[:student][:password])
             session[:student_id] = student.id
@@ -72,9 +76,17 @@ class StudentsController < ApplicationController
     helpers do 
 
       def valid_params?
-        params[:student].none? do |k, v|
-          v == ""
+        sanitize_params.none? do |k, v|
+          v == "" || v == " "
         end
+      end
+
+      def sanitize_params
+        new_student_params = {}
+        new_student_params[:name] = Sanitize.fragment(params[:student][:name])
+        new_student_params[:email] = Sanitize.fragment(params[:student][:email])
+        new_student_params[:password] = Sanitize.fragment(params[:student][:password])
+        new_student_params
       end
     end
      

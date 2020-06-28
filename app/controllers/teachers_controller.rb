@@ -9,13 +9,15 @@ class TeachersController < ApplicationController
     
       post '/teachers/signup' do
         # {"name"=>"Kelsey White", "email"=>"kelsey.shiba@gmail.com", "password"=>"pepe1969"}
+        sanitize_teacher_params
+
         if valid_params?
-          teacher = Teacher.create(params[:teacher])
+          teacher = Teacher.create(sanitize_teacher_params)
           session[:teacher_id] = teacher.id
           
           redirect to '/appointments'
         else
-          flash[:message] = "Please signup by typing into all fields"
+          flash[:message] = "Please signup by typing into all fields or enter a valid entry"
           redirect to '/teachers/signup'
         end
       end
@@ -29,7 +31,9 @@ class TeachersController < ApplicationController
       end
 
       post '/teachers/login' do
-       
+        Sanitize.fragment(params[:teacher][:email])
+        Sanitize.fragment(params[:teacher][:password])
+
         teacher = Teacher.find_by_email(params[:teacher][:email])
         if teacher && teacher.authenticate(params[:teacher][:password])
           session[:teacher_id] = teacher.id
@@ -71,9 +75,17 @@ class TeachersController < ApplicationController
       helpers do 
 
         def valid_params?
-          params[:teacher].none? do |k, v|
-            v == ""
+          sanitize_teacher_params.none? do |k, v|
+            v == "" || v == " "
           end
+        end
+
+        def sanitize_teacher_params
+          new_teacher_params = {}
+          new_teacher_params[:name] = Sanitize.fragment(params[:teacher][:name])
+          new_teacher_params[:email] = Sanitize.fragment(params[:teacher][:email])
+          new_teacher_params[:password] = Sanitize.fragment(params[:teacher][:password])
+          new_teacher_params
         end
         
       end
